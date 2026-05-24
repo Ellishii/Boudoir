@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOUDOIR CINEMA — Кинотеатр г. Ош</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #08060A;
+  --bg2:   #0F0B12;
+  --bg3:   #16111A;
+  --bg4:   #1E1825;
+  --card:  #120E16;
+  --ruby:  #7B1535;
+  --ruby2: #A01D46;
+  --ruby3: #C8265A;
+  --gold:  #C9A84C;
+  --gold2: #E8C97A;
+  --gold3: #F5E0A0;
+  --text:  #F2EBF5;
+  --muted: #7A6880;
+  --border:rgba(201,168,76,0.15);
+  --glow-ruby: 0 0 40px rgba(123,21,53,0.5);
+  --glow-gold: 0 0 30px rgba(201,168,76,0.35);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+
+/* ═══ PRELOADER ═══ */
+#preloader{
+  position:fixed;inset:0;z-index:9999;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease;
+}
+#preloader.gone{opacity:0;pointer-events:none;}
+.pl-logo{
+  font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;
+  letter-spacing:10px;color:var(--gold);
+  animation:plPulse 1.5s ease-in-out infinite;
+}
+.pl-sub{font-size:11px;color:var(--muted);letter-spacing:4px;text-transform:uppercase;margin-top:8px;}
+.pl-bar{width:200px;height:2px;background:var(--bg3);margin-top:32px;border-radius:1px;overflow:hidden;}
+.pl-fill{height:100%;background:linear-gradient(90deg,var(--ruby),var(--gold));width:0;animation:plLoad 1.8s ease forwards;}
+@keyframes plPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+@keyframes plLoad{to{width:100%;}}
+
+/* ═══ NAV ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  height:68px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;
+  background:rgba(8,6,10,.93);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
+nav.scrolled{background:rgba(8,6,10,.99);box-shadow:0 4px 30px rgba(0,0,0,.6);}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.logo-emblem{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  border:1px solid rgba(201,168,76,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:22px;font-weight:700;color:var(--gold);
+  clip-path:polygon(15% 0%,100% 0%,85% 100%,0% 100%);
+  box-shadow:var(--glow-ruby);
+}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;letter-spacing:5px;color:var(--text);}
+.logo-name em{color:var(--gold);font-style:normal;}
+.logo-tagline{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:1px;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{
+  text-decoration:none;font-size:11px;font-weight:500;
+  color:var(--muted);letter-spacing:2px;text-transform:uppercase;transition:color .25s;
+}
+.nav-links a:hover{color:var(--gold);}
+.nav-actions{display:flex;gap:10px;align-items:center;}
+.btn-ghost{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  padding:9px 20px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:1px;border-radius:2px;transition:all .25s;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-nav-buy{
+  background:linear-gradient(135deg,var(--ruby),var(--ruby2));color:#fff;border:none;
+  padding:10px 24px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:1px;border-radius:2px;
+  transition:all .3s;box-shadow:var(--glow-ruby);
+}
+.btn-nav-buy:hover{background:linear-gradient(135deg,var(--ruby2),var(--ruby3));transform:translateY(-1px);}
+.burger{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px;}
+
+/* ═══ HERO ═══ */
+#hero{margin-top:68px;height:calc(100vh - 68px);min-height:580px;position:relative;overflow:hidden;}
+.hero-slides{position:relative;width:100%;height:100%;}
+.hslide{
+  position:absolute;inset:0;opacity:0;transition:opacity .8s ease;
+  display:flex;align-items:flex-end;
+}
+.hslide.on{opacity:1;}
+.hslide-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center top;
+  transform:scale(1.08);transition:transform 9s ease;
+}
+.hslide.on .hslide-bg{transform:scale(1);}
+.hslide-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(105deg,rgba(8,6,10,.97) 0%,rgba(8,6,10,.65) 45%,rgba(8,6,10,.2) 100%),
+    linear-gradient(to top,rgba(8,6,10,.95) 0%,transparent 55%);
+}
+.hslide-poster{
+  position:absolute;right:7%;top:50%;transform:translateY(-50%);
+  width:220px;height:330px;border-radius:4px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.8),0 0 0 1px var(--border);
+  opacity:0;transition:opacity .6s .4s,transform .6s .4s ease;
+  transform:translateY(-40%) scale(.9);
+}
+.hslide.on .hslide-poster{opacity:1;transform:translateY(-50%) scale(1);}
+.hslide-poster img{width:100%;height:100%;object-fit:cover;}
+.hslide-content{
+  position:relative;z-index:2;padding:0 52px 52px;max-width:680px;
+  opacity:0;transform:translateY(24px);transition:all .7s .2s ease;
+}
+.hslide.on .hslide-content{opacity:1;transform:translateY(0);}
+.hslide-tags{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.htag{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:2px;}
+.htag-pre{background:var(--ruby);color:#fff;}
+.htag-hit{background:var(--gold);color:var(--bg);}
+.htag-age{border:1px solid rgba(255,255,255,.25);color:var(--muted);}
+.hslide-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(46px,6vw,88px);line-height:.92;font-weight:700;
+  color:#fff;margin-bottom:16px;letter-spacing:1px;
+}
+.hslide-meta{font-size:13px;color:var(--muted);margin-bottom:6px;}
+.hslide-genre{font-size:13px;color:var(--gold);font-weight:600;margin-bottom:10px;}
+.hslide-desc{font-size:14px;color:rgba(242,235,245,.65);line-height:1.7;max-width:500px;margin-bottom:28px;}
+.hslide-acts{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-buy-hero{
+  background:linear-gradient(135deg,var(--ruby),var(--ruby2));color:#fff;border:none;
+  padding:14px 34px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:700;border-radius:2px;
+  transition:all .3s;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 8px 24px rgba(123,21,53,.5);
+}
+.btn-buy-hero:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(123,21,53,.65);}
+.btn-info-hero{
+  background:rgba(255,255,255,.07);color:var(--text);
+  border:1px solid rgba(255,255,255,.18);
+  padding:14px 28px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:500;border-radius:2px;transition:all .3s;
+}
+.btn-info-hero:hover{background:rgba(255,255,255,.14);border-color:var(--gold);color:var(--gold);}
+.hero-controls{
+  position:absolute;bottom:32px;left:52px;right:52px;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.hero-dots{display:flex;gap:8px;}
+.hdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);border:none;cursor:pointer;transition:all .3s;}
+.hdot.on{background:var(--gold);width:28px;border-radius:4px;}
+.hero-arrows{display:flex;gap:8px;}
+.harr{
+  width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:all .25s;
+}
+.harr:hover{background:var(--ruby);border-color:var(--ruby);}
+.hero-now-playing{
+  position:absolute;right:52px;bottom:80px;z-index:5;
+  font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  display:flex;align-items:center;gap:12px;
+}
+.hero-now-playing::after{content:'';width:1px;height:40px;background:var(--gold);opacity:.5;}
+
+/* ═══ TICKER ═══ */
+.ticker{
+  background:var(--ruby);padding:10px 0;overflow:hidden;white-space:nowrap;
+  border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);
+}
+.ticker-track{display:inline-block;animation:tickerMove 30s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.9);padding:0 32px;
+}
+.ticker-dot{color:var(--gold);font-size:8px;}
+@keyframes tickerMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ═══ DATE BAR ═══ */
+.date-bar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 48px;display:flex;align-items:center;gap:0;overflow-x:auto;
+  position:sticky;top:68px;z-index:700;
+}
+.date-bar::-webkit-scrollbar{height:0;}
+.dbt{
+  flex-shrink:0;background:none;border:none;color:var(--muted);cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;
+  padding:16px 24px;border-bottom:2px solid transparent;transition:all .25s;white-space:nowrap;
+}
+.dbt:hover{color:var(--text);}
+.dbt.on{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ═══ SEARCH ═══ */
+.search-bar{padding:24px 48px 0;display:flex;gap:10px;}
+.s-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);
+  padding:13px 20px;border-radius:2px;font-family:'DM Sans',sans-serif;
+  font-size:14px;outline:none;transition:border-color .25s;
+}
+.s-input:focus{border-color:rgba(201,168,76,.4);}
+.s-input::placeholder{color:var(--muted);}
+.s-btn{
+  background:var(--ruby);color:#fff;border:none;border-radius:2px;
+  padding:13px 26px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:700;transition:background .25s;
+}
+.s-btn:hover{background:var(--ruby2);}
+
+/* ═══ SECTIONS ═══ */
+.sec{padding:64px 48px;}
+.sec-alt{background:var(--bg2);}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;gap:16px;flex-wrap:wrap;}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,4vw,48px);font-weight:700;letter-spacing:1px;
+}
+.sec-title span{color:var(--gold);font-style:italic;}
+.sec-link{font-size:12px;color:var(--gold);text-decoration:none;font-weight:600;letter-spacing:1px;transition:color .2s;}
+.sec-link:hover{color:var(--gold2);}
+
+/* ═══ GENRE FILTERS ═══ */
+.genre-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.gf{
+  background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+  padding:7px 18px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:600;border-radius:20px;transition:all .25s;letter-spacing:.5px;
+}
+.gf.on,.gf:hover{background:var(--ruby);color:#fff;border-color:var(--ruby);}
+
+/* ═══ MOVIE CARDS ═══ */
+.movies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:20px;}
+.mcard{
+  background:var(--card);border-radius:4px;overflow:hidden;cursor:pointer;
+  transition:transform .35s cubic-bezier(.25,.8,.25,1),box-shadow .35s;
+  position:relative;
+}
+.mcard:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,.7),0 0 0 1px var(--border);}
+.mcard-poster{aspect-ratio:2/3;background:var(--bg4);position:relative;overflow:hidden;}
+.mcard-poster img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+.mcard:hover .mcard-poster img{transform:scale(1.07);}
+.mcard-poster-placeholder{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;background:var(--bg4);
+}
+.mcard-poster-placeholder .ph-icon{font-size:40px;opacity:.3;}
+.mcard-poster-placeholder .ph-title{
+  font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;
+  color:var(--muted);text-align:center;padding:0 12px;line-height:1.3;
+}
+.mcard-badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;}
+.mcard-age{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.75);font-size:10px;font-weight:700;padding:3px 8px;border-radius:2px;}
+.mcard-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,6,10,1) 0%,rgba(8,6,10,.5) 50%,transparent 100%);
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:12px;opacity:0;transition:opacity .3s;
+}
+.mcard:hover .mcard-ov{opacity:1;}
+.mc-buy-btn{
+  width:100%;background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  color:#fff;border:none;padding:10px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;
+  border-radius:2px;transition:background .2s;
+}
+.mc-buy-btn:hover{background:var(--ruby3);}
+.mcard-body{padding:14px;}
+.mcard-title{
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;
+  line-height:1.2;margin-bottom:5px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.mcard-genre{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.mcard-foot{display:flex;justify-content:space-between;align-items:center;}
+.mcard-price{font-size:14px;font-weight:700;color:var(--gold);}
+.mcard-country{font-size:10px;color:var(--muted);}
+
+/* ═══ SCHEDULE ═══ */
+.sched-wrap{display:flex;flex-direction:column;gap:3px;}
+.sched-item{
+  display:grid;grid-template-columns:280px 1fr 150px;
+  background:var(--bg3);border-radius:4px;align-items:center;overflow:hidden;
+  transition:background .2s;border:1px solid transparent;
+}
+.sched-item:hover{background:var(--bg4);border-color:var(--border);}
+.si-film{display:flex;align-items:center;gap:14px;padding:14px 20px;}
+.si-thumb{
+  width:52px;height:70px;border-radius:3px;object-fit:cover;flex-shrink:0;
+  background:var(--bg4);border:1px solid var(--border);
+}
+.si-thumb-ph{
+  width:52px;height:70px;border-radius:3px;flex-shrink:0;
+  background:var(--bg4);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:20px;opacity:.4;
+}
+.si-info h4{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;margin-bottom:3px;line-height:1.2;}
+.si-info p{font-size:11px;color:var(--muted);}
+.si-times{display:flex;gap:8px;padding:14px 20px;flex-wrap:wrap;align-items:center;}
+.si-time{
+  background:var(--bg4);border:1px solid var(--border);color:var(--text);
+  padding:9px 16px;cursor:pointer;border-radius:3px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;
+  transition:all .2s;text-align:center;
+}
+.si-time:hover,.si-time.picked{background:var(--ruby);border-color:var(--ruby);color:#fff;}
+.si-time small{display:block;font-size:9px;opacity:.65;margin-top:1px;}
+.si-price{padding:14px 20px;text-align:right;}
+.si-from{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px;}
+.si-amt{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--gold);}
+
+/* ═══ HALLS ═══ */
+.halls-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.hcard{
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  padding:28px;transition:all .35s;position:relative;overflow:hidden;
+}
+.hcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--ruby),var(--gold));
+  transform:scaleX(0);transform-origin:left;transition:transform .4s;
+}
+.hcard:hover::before{transform:scaleX(1);}
+.hcard:hover{border-color:rgba(201,168,76,.3);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5);}
+.hcard-icon{font-size:30px;margin-bottom:14px;display:block;}
+.hcard-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.hcard-desc{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:18px;}
+.hcard-specs{display:flex;flex-direction:column;gap:8px;}
+.hspec{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;}
+.hspec:last-child{border:none;}
+.hs-label{color:var(--muted);}
+.hs-val{font-weight:600;}
+.minimap{margin-top:18px;}
+.mm-screen{text-align:center;font-size:9px;color:var(--muted);letter-spacing:2px;padding:5px;background:rgba(255,255,255,.04);border-radius:2px;margin-bottom:8px;}
+.mm-rows{display:flex;flex-direction:column;gap:2px;align-items:center;}
+.mm-row{display:flex;gap:2px;}
+.mm-s{width:10px;height:8px;border-radius:2px 2px 0 0;border:1px solid rgba(255,255,255,.08);background:var(--bg4);}
+.mm-s.mv{background:rgba(201,168,76,.2);border-color:rgba(201,168,76,.4);}
+.mm-s.mt{background:rgba(123,21,53,.3);border-color:rgba(123,21,53,.5);}
+
+/* ═══ VIP CARD ═══ */
+#vipcard{background:linear-gradient(135deg,var(--bg) 0%,#1a0a12 100%);}
+.vip-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.vip-card-visual{perspective:1000px;}
+.vc-flip{
+  width:340px;height:210px;position:relative;transform-style:preserve-3d;
+  animation:cardFloat 4s ease-in-out infinite;
+  cursor:pointer;transition:transform .6s;
+  filter:drop-shadow(0 30px 60px rgba(123,21,53,.6));
+}
+.vc-flip:hover{transform:rotateY(180deg);}
+@keyframes cardFloat{
+  0%,100%{transform:translateY(0) rotateX(2deg);}
+  50%{transform:translateY(-12px) rotateX(-2deg);}
+}
+.vc-front,.vc-back{
+  position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;
+  overflow:hidden;
+}
+.vc-front{
+  background:linear-gradient(135deg,#1a0510 0%,#2d0a1c 40%,#1a0510 100%);
+  border:1px solid rgba(201,168,76,.3);
+  display:flex;flex-direction:column;justify-content:space-between;padding:24px;
+}
+.vc-front::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 20%,rgba(201,168,76,.12) 0%,transparent 60%),
+    radial-gradient(ellipse at 20% 80%,rgba(123,21,53,.25) 0%,transparent 60%);
+}
+.vc-logo-sm{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;letter-spacing:4px;color:var(--gold);position:relative;}
+.vc-logo-sm span{color:rgba(255,255,255,.7);}
+.vc-chip{
+  width:40px;height:30px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border-radius:4px;margin:8px 0;position:relative;
+}
+.vc-chip::after{content:'';position:absolute;inset:4px;border:1px solid rgba(0,0,0,.3);border-radius:2px;}
+.vc-number{font-size:16px;font-weight:700;letter-spacing:4px;color:var(--text);position:relative;}
+.vc-holder-row{display:flex;justify-content:space-between;align-items:flex-end;position:relative;}
+.vc-label{font-size:8px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;}
+.vc-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:2px;}
+.vc-tier{
+  background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;color:#fff;
+}
+.vc-back{
+  background:linear-gradient(135deg,#1a0510 0%,#2d0a1c 100%);
+  border:1px solid rgba(201,168,76,.3);
+  transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;padding:24px;
+}
+.vc-stripe{height:40px;background:rgba(0,0,0,.5);margin:-24px -24px 20px;width:calc(100% + 48px);}
+.vc-back-text{font-size:11px;color:var(--muted);line-height:1.7;}
+.vc-back-logo{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);margin-top:16px;letter-spacing:3px;}
+
+.vip-text .sec-title{margin-bottom:20px;}
+.vip-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:28px;}
+.vip-perks{display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
+.vip-perk{display:flex;align-items:flex-start;gap:14px;}
+.vp-icon{
+  width:40px;height:40px;flex-shrink:0;
+  background:rgba(123,21,53,.2);border:1px solid rgba(123,21,53,.3);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.vp-body h5{font-size:14px;font-weight:700;margin-bottom:3px;}
+.vp-body p{font-size:12px;color:var(--muted);line-height:1.5;}
+.vip-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.tier-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  padding:16px;text-align:center;transition:all .3s;cursor:pointer;
+}
+.tier-card:hover,.tier-card.selected{border-color:var(--gold);background:rgba(201,168,76,.05);}
+.tier-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.tier-price{font-size:13px;font-weight:700;margin-bottom:4px;}
+.tier-disc{font-size:11px;color:var(--muted);}
+.btn-get-vip{
+  width:100%;background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  color:#fff;border:none;padding:16px;cursor:pointer;border-radius:2px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;
+  transition:all .3s;letter-spacing:.5px;
+}
+.btn-get-vip:hover{background:linear-gradient(135deg,var(--ruby2),var(--ruby3));box-shadow:var(--glow-ruby);}
+
+/* ═══ NEWS ═══ */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.news-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;cursor:pointer;transition:all .3s;
+}
+.news-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.25);}
+.news-img{height:180px;object-fit:cover;width:100%;background:var(--bg4);}
+.news-img-ph{
+  height:180px;background:linear-gradient(135deg,var(--bg4),var(--bg3));
+  display:flex;align-items:center;justify-content:center;font-size:40px;opacity:.4;
+}
+.news-body{padding:20px;}
+.news-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ruby3);margin-bottom:8px;}
+.news-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;line-height:1.3;margin-bottom:10px;}
+.news-excerpt{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.news-date{font-size:11px;color:var(--muted);}
+
+/* ═══ PROMOS ═══ */
+.promos-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.promo-c{
+  border-radius:8px;overflow:hidden;position:relative;
+  min-height:200px;display:flex;align-items:flex-end;cursor:pointer;
+}
+.promo-c-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .4s;}
+.promo-c:hover .promo-c-bg{transform:scale(1.05);}
+.promo-c-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,6,10,.96) 0%,rgba(8,6,10,.3) 100%);}
+.promo-c-body{position:relative;z-index:2;padding:24px;}
+.promo-tag2{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.promo-title2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;margin-bottom:6px;}
+.promo-desc2{font-size:12px;color:var(--muted);margin-bottom:12px;}
+.promo-link2{font-size:12px;font-weight:700;color:var(--ruby3);text-decoration:none;}
+
+/* ═══ ABOUT ═══ */
+.about-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.about-imgs{position:relative;height:480px;}
+.about-img-main{
+  position:absolute;top:0;left:0;width:75%;height:80%;
+  object-fit:cover;border-radius:4px;border:1px solid var(--border);
+}
+.about-img-accent{
+  position:absolute;bottom:0;right:0;width:55%;height:60%;
+  object-fit:cover;border-radius:4px;border:2px solid var(--gold);
+}
+.about-badge{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  width:90px;height:90px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 0 0 4px var(--bg),0 0 0 6px var(--ruby);z-index:5;
+}
+.ab-num{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--gold);line-height:1;}
+.ab-label{font-size:8px;color:#fff;letter-spacing:2px;text-transform:uppercase;}
+.about-text{}
+.about-text p{font-size:14px;color:var(--muted);line-height:1.85;margin-bottom:18px;}
+.about-feats{list-style:none;margin-top:24px;}
+.about-feats li{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;
+}
+.about-feats li::before{content:'◆';color:var(--gold);font-size:8px;flex-shrink:0;}
+
+/* ═══ CONTACTS ═══ */
+.contacts-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+.contact-info{}
+.ci-block{margin-bottom:28px;}
+.ci-label{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+.ci-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
+.ci-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.ci-phone{font-size:28px;font-weight:700;color:var(--gold);font-family:'Cormorant Garamond',serif;}
+.work-hours{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.wh{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:14px;}
+.wh-day{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.wh-time{font-size:16px;font-weight:700;}
+.contact-form{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:32px;}
+.cf-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;margin-bottom:20px;}
+.cf-input{
+  width:100%;background:var(--bg4);border:1px solid var(--border);color:var(--text);
+  padding:13px 16px;border-radius:3px;font-family:'DM Sans',sans-serif;
+  font-size:13px;outline:none;transition:border-color .2s;margin-bottom:10px;
+}
+.cf-input:focus{border-color:rgba(201,168,76,.4);}
+.cf-input::placeholder{color:var(--muted);}
+.cf-textarea{min-height:100px;resize:vertical;}
+.cf-submit{
+  width:100%;background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  color:#fff;border:none;padding:15px;cursor:pointer;border-radius:2px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;
+  transition:all .3s;margin-top:6px;letter-spacing:.5px;
+}
+.cf-submit:hover{background:linear-gradient(135deg,var(--ruby2),var(--ruby3));box-shadow:var(--glow-ruby);}
+.socials{display:flex;gap:10px;margin-top:20px;}
+.soc-btn{
+  width:40px;height:40px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;font-size:16px;color:var(--muted);transition:all .25s;
+}
+.soc-btn:hover{background:var(--ruby);border-color:var(--ruby);color:#fff;}
+
+/* ═══ FOOTER ═══ */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:56px 48px 28px;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.footer-brand p{font-size:13px;color:var(--muted);line-height:1.7;max-width:280px;margin-top:14px;}
+.footer-col h5{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul li a{text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s;}
+.footer-col ul li a:hover{color:var(--text);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-copy{font-size:12px;color:var(--muted);}
+.pay-icons{display:flex;gap:8px;}
+.pay-ic{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:5px 10px;font-size:10px;color:var(--muted);font-weight:700;}
+
+/* ═══ OVERLAY BASE ═══ */
+.ov-wrap{
+  position:fixed;inset:0;z-index:1500;
+  background:rgba(8,6,10,.96);backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .35s;padding:20px;
+}
+.ov-wrap.open{opacity:1;pointer-events:all;}
+.ov-box{
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  max-width:960px;width:100%;max-height:90vh;overflow-y:auto;
+  transform:translateY(20px) scale(.97);transition:all .35s;
+}
+.ov-wrap.open .ov-box{transform:translateY(0) scale(1);}
+.ov-head{
+  padding:24px 32px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:sticky;top:0;background:var(--bg2);z-index:5;border-radius:8px 8px 0 0;
+}
+.ov-head-info h3{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;margin-bottom:4px;}
+.ov-head-info p{font-size:12px;color:var(--muted);}
+.ov-close{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  color:var(--text);width:38px;height:38px;border-radius:50%;cursor:pointer;
+  font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;
+}
+.ov-close:hover{background:var(--ruby);border-color:var(--ruby);}
+.ov-body{padding:32px;}
+
+/* ═══ MOVIE DETAIL ═══ */
+#detailBox{max-width:840px;}
+.md-hero-area{position:relative;height:320px;border-radius:6px 6px 0 0;overflow:hidden;}
+.md-hero-bg2{position:absolute;inset:0;background-size:cover;background-position:center;}
+.md-hero-ov2{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,6,10,1) 0%,rgba(8,6,10,.45) 60%,transparent 100%);}
+.md-hero-bottom{position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:20px;align-items:flex-end;}
+.md-poster-sm{width:90px;height:135px;border-radius:4px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;}
+.md-poster-sm-ph{width:90px;height:135px;border-radius:4px;border:1px solid var(--border);flex-shrink:0;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:30px;opacity:.4;}
+.md-title2{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;line-height:1.05;margin-bottom:8px;}
+.md-body2{padding:24px 28px;}
+.md-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.md-pill{background:var(--bg4);border:1px solid var(--border);font-size:11px;padding:5px 14px;border-radius:20px;color:var(--muted);}
+.md-pill.gold{border-color:rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.08);}
+.md-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.md-info-item span{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.md-info-item strong{font-size:14px;font-weight:600;}
+.md-desc2{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:22px;border-left:2px solid var(--ruby);padding-left:16px;}
+.md-trailer-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+  color:var(--text);padding:12px 22px;border-radius:4px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .25s;
+  text-decoration:none;margin-bottom:22px;
+}
+.md-trailer-btn:hover{border-color:var(--ruby3);color:var(--ruby3);background:rgba(200,38,90,.08);}
+.md-trailer-btn .play-ic{
+  width:32px;height:32px;background:var(--ruby);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;
+}
+.md-session-title{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text);}
+.md-sessions{display:flex;gap:8px;flex-wrap:wrap;}
+.md-sess-btn{
+  background:var(--bg4);border:1px solid var(--border);color:var(--text);
+  padding:10px 18px;cursor:pointer;border-radius:3px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;transition:all .2s;
+}
+.md-sess-btn:hover,.md-sess-btn.picked{background:var(--ruby);border-color:var(--ruby);color:#fff;}
+.md-buy-row{display:flex;gap:12px;align-items:center;margin-top:20px;flex-wrap:wrap;}
+.md-price-display{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--gold);}
+
+/* ═══ BOOKING ═══ */
+#bookingBox{max-width:900px;}
+.bk-screen{
+  text-align:center;font-size:10px;color:var(--muted);letter-spacing:3px;
+  padding:11px 80px;background:linear-gradient(to bottom,rgba(255,255,255,.1),transparent);
+  clip-path:polygon(4%0,96%0,100%100%,0%100%);margin-bottom:36px;
+}
+.sp-grid{display:flex;flex-direction:column;gap:5px;align-items:center;margin-bottom:24px;}
+.sp-row{display:flex;gap:4px;align-items:center;}
+.sp-rl{font-size:10px;color:var(--muted);width:18px;text-align:center;flex-shrink:0;}
+.sp-s{
+  width:26px;height:22px;border-radius:4px 4px 1px 1px;
+  background:var(--bg4);border:1px solid rgba(255,255,255,.1);
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:transparent;
+}
+.sp-s:hover:not(.sp-x){background:rgba(123,21,53,.35);border-color:var(--ruby2);}
+.sp-s.sp-on{background:var(--ruby);border-color:var(--ruby3);color:#fff;}
+.sp-s.sp-x{background:rgba(100,100,100,.15);border-color:rgba(100,100,100,.2);cursor:not-allowed;opacity:.5;}
+.sp-s.sp-v{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.09);}
+.sp-s.sp-v:hover:not(.sp-x){background:rgba(201,168,76,.3);}
+.sp-s.sp-on.sp-v{background:var(--gold);border-color:var(--gold2);color:var(--bg);}
+.seat-legend{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;}
+.sl-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);}
+.sl-box{width:18px;height:14px;border-radius:3px 3px 1px 1px;}
+.sl-free{background:var(--bg4);border:1px solid rgba(255,255,255,.1);}
+.sl-sel{background:var(--ruby);}
+.sl-taken{background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.2);}
+.sl-vip{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.4);}
+
+/* ═══ CHECKOUT FORM (step 2) ═══ */
+.checkout-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.checkout-field{}
+.cf-lbl{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.cf-in{
+  width:100%;background:var(--bg4);border:1px solid var(--border);color:var(--text);
+  padding:13px 16px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+.cf-in:focus{border-color:rgba(201,168,76,.4);}
+.cf-in::placeholder{color:var(--muted);}
+.payment-methods{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.pm-btn{
+  background:var(--bg4);border:2px solid var(--border);border-radius:6px;
+  padding:12px 20px;cursor:pointer;transition:all .2s;text-align:center;flex:1;min-width:100px;
+}
+.pm-btn:hover,.pm-btn.picked{border-color:var(--gold);}
+.pm-icon{font-size:22px;display:block;margin-bottom:4px;}
+.pm-name{font-size:11px;font-weight:700;color:var(--muted);}
+.pm-btn.picked .pm-name{color:var(--gold);}
+
+.bk-summary{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:24px;}
+.bk-sum-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,.05);}
+.bk-sum-row:last-child{border:none;}
+.bk-sum-row.total{padding-top:16px;margin-top:6px;font-size:20px;font-weight:800;color:var(--gold);}
+.bk-sum-label{color:var(--muted);font-size:13px;}
+.bk-next-btn{
+  width:100%;background:linear-gradient(135deg,var(--ruby),var(--ruby2));
+  color:#fff;border:none;padding:16px;cursor:pointer;border-radius:3px;margin-top:16px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;transition:all .3s;
+}
+.bk-next-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--ruby2),var(--ruby3));box-shadow:var(--glow-ruby);}
+.bk-next-btn:disabled{background:var(--bg4);color:var(--muted);cursor:not-allowed;}
+
+/* ═══ STEPS ═══ */
+.bk-steps{display:flex;align-items:center;gap:0;margin-bottom:28px;}
+.bk-step{
+  display:flex;align-items:center;gap:8px;padding:8px 16px;
+  font-size:12px;font-weight:600;color:var(--muted);transition:color .3s;
+}
+.bk-step.active{color:var(--gold);}
+.bk-step.done{color:var(--ruby3);}
+.bk-step-num{
+  width:24px;height:24px;border-radius:50%;border:1px solid currentColor;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;
+}
+.bk-step-sep{flex:1;height:1px;background:var(--border);}
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+
+/* ═══ TICKET (print) ═══ */
+#ticketBox{max-width:540px;}
+.ticket-wrapper{background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ticket-top{
+  background:linear-gradient(135deg,#1a0510 0%,#2d0a1c 100%);
+  padding:28px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:2px dashed var(--border);
+}
+.ticket-cinema{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;letter-spacing:4px;color:var(--gold);}
+.ticket-cinema span{color:rgba(255,255,255,.6);}
+.ticket-qr{
+  width:70px;height:70px;background:var(--gold);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--bg);
+  text-align:center;padding:4px;font-family:'DM Sans',sans-serif;
+}
+.ticket-body{padding:24px;}
+.ticket-movie{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;margin-bottom:4px;}
+.ticket-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0;border:1px solid var(--border);border-radius:4px;padding:16px;}
+.ti-item span{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px;}
+.ti-item strong{font-size:14px;}
+.ticket-seats-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.ticket-seat-badge{
+  background:var(--ruby);color:#fff;font-size:12px;font-weight:700;
+  padding:6px 14px;border-radius:3px;font-family:'DM Sans',sans-serif;
+}
+.ticket-code-area{
+  background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  padding:16px;display:flex;justify-content:space-between;align-items:center;
+}
+.ticket-code-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.ticket-code{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:var(--gold);}
+.ticket-actions{display:flex;gap:10px;margin-top:20px;}
+.btn-print{
+  flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);
+  padding:14px;cursor:pointer;border-radius:3px;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;transition:all .25s;
+}
+.btn-print:hover{border-color:var(--gold);color:var(--gold);}
+.btn-done{
+  flex:1;background:linear-gradient(135deg,var(--ruby),var(--ruby2));color:#fff;border:none;
+  padding:14px;cursor:pointer;border-radius:3px;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:700;transition:all .3s;
+}
+.btn-done:hover{box-shadow:var(--glow-ruby);}
+
+/* ═══ SUCCESS ═══ */
+.success-center{text-align:center;padding:40px;}
+.success-icon2{font-size:72px;display:block;margin-bottom:20px;animation:bounceIn .7s cubic-bezier(.36,.07,.19,.97);}
+@keyframes bounceIn{0%{transform:scale(0);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+.success-h{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:700;color:var(--gold);margin-bottom:12px;}
+.success-p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto;}
+
+/* ═══ VIP MODAL ═══ */
+#vipBox{max-width:560px;}
+.vip-form-body{padding:28px 32px;}
+.vip-tier-sel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.vts{
+  background:var(--bg4);border:2px solid var(--border);border-radius:6px;
+  padding:16px 12px;text-align:center;cursor:pointer;transition:all .3s;
+}
+.vts:hover,.vts.on{border-color:var(--gold);background:rgba(201,168,76,.06);}
+.vts-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.vts-price{font-size:13px;font-weight:700;margin-bottom:4px;}
+.vts-disc{font-size:11px;color:var(--muted);}
+.vts-perks{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5;}
+
+/* ═══ TOAST ═══ */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:var(--bg3);border:1px solid var(--gold);
+  color:var(--text);padding:14px 22px;border-radius:6px;
+  font-size:13px;font-weight:600;max-width:320px;
+  transform:translateX(130%);transition:transform .35s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+.toast.show{transform:translateX(0);}
+
+/* ═══ SCROLL ANIMATIONS ═══ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .6s ease,transform .6s ease;}
+.reveal-left.in{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .6s ease,transform .6s ease;}
+.reveal-right.in{opacity:1;transform:translateX(0);}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){
+  nav{padding:0 24px;}
+  .nav-links{display:none;}
+  .burger{display:block;}
+  .sec{padding:48px 24px;}
+  .date-bar,.search-bar{padding:0 24px;}
+  .search-bar{padding-top:20px;}
+  .halls-grid,.news-grid{grid-template-columns:1fr 1fr;}
+  .vip-layout,.about-layout,.contacts-layout{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .hslide-poster{display:none;}
+  .hslide-content{padding:0 24px 44px;}
+  .hero-controls{left:24px;right:24px;}
+}
+@media(max-width:720px){
+  .movies-grid{grid-template-columns:repeat(2,1fr);}
+  .halls-grid,.news-grid,.promos-grid{grid-template-columns:1fr;}
+  .sched-item{grid-template-columns:1fr;}
+  .si-price{display:none;}
+  .checkout-grid{grid-template-columns:1fr;}
+  .md-info-grid{grid-template-columns:repeat(2,1fr);}
+  .vip-card-visual{display:none;}
+  .ticket-info-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:480px){
+  .movies-grid{grid-template-columns:1fr 1fr;}
+  .hslide-title{font-size:38px;}
+  .footer-top{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+  .about-imgs{height:300px;}
+}
+
+/* ═══ MOBILE NAV ═══ */
+.mobile-nav{
+  position:fixed;top:68px;left:0;right:0;z-index:790;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:20px 24px;display:none;flex-direction:column;gap:0;
+}
+.mobile-nav.open{display:flex;}
+.mobile-nav a{
+  text-decoration:none;font-size:14px;font-weight:600;color:var(--muted);
+  letter-spacing:1px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05);
+  transition:color .2s;
+}
+.mobile-nav a:hover{color:var(--gold);}
+
+/* ═══ PARTICLE BG ═══ */
+.particles-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.particle{
+  position:absolute;width:2px;height:2px;border-radius:50%;
+  background:var(--gold);opacity:0;
+  animation:particleFloat linear infinite;
+}
+@keyframes particleFloat{
+  0%{transform:translateY(100vh) scale(0);opacity:0;}
+  10%{opacity:.6;}
+  90%{opacity:.3;}
+  100%{transform:translateY(-20px) scale(1);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="pl-logo">BOUDOIR</div>
+  <div class="pl-sub">Cinema · Ош</div>
+  <div class="pl-bar"><div class="pl-fill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">
+    <div class="logo-emblem">B</div>
+    <div>
+      <div class="logo-name">BOUDOIR <em>CINEMA</em></div>
+      <div class="logo-tagline">г. Ош · с 2010 года</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#afisha">Афиша</a></li>
+    <li><a href="#schedule">Расписание</a></li>
+    <li><a href="#halls">Залы</a></li>
+    <li><a href="#vipcard">VIP-карта</a></li>
+    <li><a href="#news">Новости</a></li>
+    <li><a href="#contacts">Контакты</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="btn-ghost" onclick="openVipModal()">👑 VIP-карта</button>
+    <button class="btn-nav-buy" onclick="scrollTo2('schedule')">Купить билет</button>
+    <button class="burger" id="burgerBtn" onclick="toggleMobileNav()">☰</button>
+  </div>
+</nav>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="#afisha" onclick="closeMobileNav()">Афиша</a>
+  <a href="#schedule" onclick="closeMobileNav()">Расписание</a>
+  <a href="#halls" onclick="closeMobileNav()">Залы</a>
+  <a href="#vipcard" onclick="closeMobileNav()">VIP-карта</a>
+  <a href="#news" onclick="closeMobileNav()">Новости</a>
+  <a href="#contacts" onclick="closeMobileNav()">Контакты</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="particles-bg" id="particles"></div>
+  <div class="hero-slides" id="heroSlides"></div>
+  <div class="hero-controls">
+    <div class="hero-dots" id="heroDots"></div>
+    <div class="hero-arrows">
+      <button class="harr" onclick="prevSlide()">←</button>
+      <button class="harr" onclick="nextSlide()">→</button>
+    </div>
+  </div>
+  <div class="hero-now-playing">Сейчас в кино</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- DATE BAR -->
+<div class="date-bar" id="dateBar"></div>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input class="s-input" id="searchInput" placeholder="🔍  Поиск фильма, жанра, страны..." oninput="renderMovies()">
+  <button class="s-btn" onclick="renderMovies()">Найти</button>
+</div>
+
+<!-- AFISHA -->
+<section class="sec" id="afisha">
+  <div class="sec-head">
+    <h2 class="sec-title">Афиша <span>сегодня</span></h2>
+    <a href="#" class="sec-link">Все фильмы →</a>
+  </div>
+  <div class="genre-filters" id="genreFilters"></div>
+  <div class="movies-grid" id="moviesGrid"></div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="sec sec-alt" id="schedule">
+  <div class="sec-head">
+    <h2 class="sec-title">Расписание <span>сеансов</span></h2>
+  </div>
+  <div class="sched-wrap" id="schedWrap"></div>
+</section>
+
+<!-- HALLS -->
+<section class="sec" id="halls">
+  <div class="sec-head">
+    <h2 class="sec-title">Наши <span>залы</span></h2>
+  </div>
+  <div class="halls-grid" id="hallsGrid"></div>
+</section>
+
+<!-- VIP CARD -->
+<section class="sec" id="vipcard">
+  <div class="vip-layout">
+    <div class="vip-card-visual">
+      <div class="vc-flip" onclick="this.style.transform=this.style.transform?'':'rotateY(180deg)'">
+        <div class="vc-front">
+          <div>
+            <div class="vc-logo-sm">BOUDOIR <span>CINEMA</span></div>
+            <div class="vc-chip"></div>
+          </div>
+          <div>
+            <div class="vc-number" id="vcNumber">•••• •••• •••• 0000</div>
+            <div class="vc-holder-row">
+              <div>
+                <div class="vc-label">Держатель</div>
+                <div class="vc-name">ВАШЕ ИМЯ</div>
+              </div>
+              <div class="vc-tier">GOLD</div>
+            </div>
+          </div>
+        </div>
+        <div class="vc-back">
+          <div class="vc-stripe"></div>
+          <div class="vc-back-text">
+            Карта BOUDOIR дает скидки на билеты, попкорн и бар. Баллы начисляются за каждую покупку.
+            Покажите карту на кассе или введите номер онлайн.
+          </div>
+          <div class="vc-back-logo">BOUDOIR CINEMA</div>
+        </div>
+      </div>
+    </div>
+    <div class="vip-text">
+      <span style="font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:12px">◆ Программа лояльности</span>
+      <h2 class="sec-title" style="margin-bottom:20px">BOUDOIR <span>VIP-карта</span></h2>
+      <p class="vip-desc">Станьте привилегированным гостем BOUDOIR Cinema. Накапливайте баллы, получайте скидки на билеты, напитки и попкорн. Чем больше вы с нами — тем больше привилегий.</p>
+      <div class="vip-perks">
+        <div class="vip-perk">
+          <div class="vp-icon">🎟️</div>
+          <div class="vp-body"><h5>Скидки на билеты</h5><p>Silver −10% · Gold −20% · Platinum −30% на все сеансы</p></div>
+        </div>
+        <div class="vip-perk">
+          <div class="vp-icon">🍿</div>
+          <div class="vp-body"><h5>Попкорн и бар</h5><p>Скидка 15% на всё меню кафе и бара кинотеатра</p></div>
+        </div>
+        <div class="vip-perk">
+          <div class="vp-icon">⭐</div>
+          <div class="vp-body"><h5>Баллы за каждый сом</h5><p>1 сом = 1 балл. 100 баллов = скидка 10 сом на следующий билет</p></div>
+        </div>
+        <div class="vip-perk">
+          <div class="vp-icon">🎂</div>
+          <div class="vp-body"><h5>День рождения</h5><p>Бесплатный билет в день рождения для Platinum-держателей</p></div>
+        </div>
+        <div class="vip-perk">
+          <div class="vp-icon">📱</div>
+          <div class="vp-body"><h5>Приоритетные билеты</h5><p>Доступ к покупке за 48 ч до старта продаж для всех</p></div>
+        </div>
+      </div>
+      <div class="vip-tiers">
+        <div class="tier-card selected" onclick="selectTier(this,'Silver')">
+          <div class="tier-name">Silver</div>
+          <div class="tier-price">500 сом/год</div>
+          <div class="tier-disc">Скидка −10%</div>
+        </div>
+        <div class="tier-card" onclick="selectTier(this,'Gold')">
+          <div class="tier-name">Gold</div>
+          <div class="tier-price">1200 сом/год</div>
+          <div class="tier-disc">Скидка −20%</div>
+        </div>
+        <div class="tier-card" onclick="selectTier(this,'Platinum')">
+          <div class="tier-name">Platinum</div>
+          <div class="tier-price">2500 сом/год</div>
+          <div class="tier-disc">Скидка −30%</div>
+        </div>
+      </div>
+      <button class="btn-get-vip" onclick="openVipModal()">👑 Оформить VIP-карту</button>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="sec sec-alt" id="news">
+  <div class="sec-head">
+    <h2 class="sec-title">Новости <span>кинотеатра</span></h2>
+    <a href="#" class="sec-link">Все новости →</a>
+  </div>
+  <div class="news-grid" id="newsGrid"></div>
+</section>
+
+<!-- PROMOS -->
+<section class="sec" id="promos">
+  <div class="sec-head">
+    <h2 class="sec-title">Акции <span>и скидки</span></h2>
+  </div>
+  <div class="promos-grid">
+    <div class="promo-c">
+      <div class="promo-c-bg" style="background:linear-gradient(135deg,#1a0a0a,#3d0f0f)"></div>
+      <div class="promo-c-ov"></div>
+      <div class="promo-c-body">
+        <div class="promo-tag2">🎓 Скидка</div>
+        <div class="promo-title2">Студентам −30%</div>
+        <div class="promo-desc2">По студенческому билету на будние сеансы до 17:00. Предъявите документ в кассе.</div>
+        <a class="promo-link2" href="#">Подробнее →</a>
+      </div>
+    </div>
+    <div class="promo-c">
+      <div class="promo-c-bg" style="background:linear-gradient(135deg,#0a0a1a,#0f0f3d)"></div>
+      <div class="promo-c-ov"></div>
+      <div class="promo-c-body">
+        <div class="promo-tag2">👨‍👩‍👧 Семейный</div>
+        <div class="promo-title2">Семейный пакет</div>
+        <div class="promo-desc2">2 взрослых + 2 детских = попкорн и 2 напитка в подарок. Каждые выходные.</div>
+        <a class="promo-link2" href="#">Подробнее →</a>
+      </div>
+    </div>
+    <div class="promo-c" style="min-height:180px">
+      <div class="promo-c-bg" style="background:linear-gradient(135deg,#0a1a0a,#0f3d0f)"></div>
+      <div class="promo-c-ov"></div>
+      <div class="promo-c-body">
+        <div class="promo-tag2">🎂 Праздник</div>
+        <div class="promo-title2">День рождения</div>
+        <div class="promo-desc2">Именинник — бесплатно! Просто предъявите паспорт в день рождения.</div>
+        <a class="promo-link2" href="#">Подробнее →</a>
+      </div>
+    </div>
+    <div class="promo-c" style="min-height:180px">
+      <div class="promo-c-bg" style="background:linear-gradient(135deg,#1a0a1a,#3d0f3d)"></div>
+      <div class="promo-c-ov"></div>
+      <div class="promo-c-body">
+        <div class="promo-tag2">🏢 Бизнес</div>
+        <div class="promo-title2">Аренда зала</div>
+        <div class="promo-desc2">Корпоративы, презентации, частные показы. Полный сервис и кейтеринг.</div>
+        <a class="promo-link2" href="#">Связаться →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="sec sec-alt" id="about">
+  <div class="about-layout">
+    <div class="about-imgs reveal-left">
+      <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&q=80" alt="Boudoir Cinema зал" class="about-img-main" onerror="this.style.display='none'">
+      <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80" alt="Экран" class="about-img-accent" onerror="this.style.display='none'">
+      <div class="about-badge">
+        <div class="ab-num">14</div>
+        <div class="ab-label">лет</div>
+      </div>
+    </div>
+    <div class="about-text reveal-right">
+      <span style="font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:14px">◆ О нас</span>
+      <h2 class="sec-title" style="margin-bottom:24px">BOUDOIR <span>Cinema</span></h2>
+      <p>Кинотеатр BOUDOIR открылся в 2010 году в городе Ош. За эти годы мы стали любимым местом отдыха для тысяч семей, молодёжи и ценителей хорошего кино.</p>
+      <p>Мы постоянно обновляем оборудование, расширяем репертуар и создаём лучшие условия для просмотра. Наш приоритет — ваш комфорт и незабываемые впечатления.</p>
+      <ul class="about-feats">
+        <li>Современная цифровая проекция 4K</li>
+        <li>Объёмный звук Dolby Digital 7.1</li>
+        <li>Онлайн-касса с выбором мест 24/7</li>
+        <li>VIP-зал с реклайнерами и баром</li>
+        <li>Широкий выбор: кыргызское, казахское, мировое кино</li>
+        <li>Детские сеансы и семейные пакеты</li>
+        <li>Программа лояльности BOUDOIR Card</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section class="sec" id="contacts">
+  <div class="sec-head">
+    <h2 class="sec-title">Контакты <span>и адрес</span></h2>
+  </div>
+  <div class="contacts-layout">
+    <div class="contact-info">
+      <div class="ci-block">
+        <div class="ci-label">Адрес</div>
+        <div class="ci-val">г. Ош, ул. Исанова 79/2К</div>
+        <div class="ci-sub">Кыргызстан · Ориентир: рядом с центральным базаром</div>
+      </div>
+      <div class="ci-block">
+        <div class="ci-label">Телефон кассы</div>
+        <div class="ci-phone">+996 507 912 006</div>
+        <div class="ci-sub">Ежедневно 09:00 – 23:00</div>
+      </div>
+      <div class="ci-block">
+        <div class="ci-label">Соцсети</div>
+        <div class="socials">
+          <a class="soc-btn" href="#" title="Instagram">📷</a>
+          <a class="soc-btn" href="#" title="Telegram">✈️</a>
+          <a class="soc-btn" href="#" title="TikTok">🎵</a>
+          <a class="soc-btn" href="#" title="WhatsApp">💬</a>
+        </div>
+      </div>
+      <div class="work-hours">
+        <div class="wh"><div class="wh-day">Будни</div><div class="wh-time">10:00 – 23:00</div></div>
+        <div class="wh"><div class="wh-day">Выходные</div><div class="wh-time">09:00 – 24:00</div></div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="cf-title">Написать нам</div>
+      <input class="cf-input" type="text" placeholder="Ваше имя">
+      <input class="cf-input" type="email" placeholder="Email">
+      <input class="cf-input" type="tel" placeholder="Телефон">
+      <textarea class="cf-input cf-textarea" placeholder="Сообщение..."></textarea>
+      <button class="cf-submit" onclick="showToast('✓ Сообщение отправлено! Ответим в течение 24 часов.')">Отправить сообщение</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">
+        <div class="logo-emblem">B</div>
+        <div>
+          <div class="logo-name">BOUDOIR <em>CINEMA</em></div>
+          <div class="logo-tagline">г. Ош · с 2010 года</div>
+        </div>
+      </a>
+      <p>Лучший кинотеатр г. Ош. Современные залы, кыргызское и мировое кино. Онлайн-касса 24/7. ул. Исанова 79/2К.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Кино</h5>
+      <ul>
+        <li><a href="#afisha">Афиша</a></li>
+        <li><a href="#schedule">Расписание</a></li>
+        <li><a href="#">Премьеры</a></li>
+        <li><a href="#">Скоро</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Зрителям</h5>
+      <ul>
+        <li><a href="#">Мои билеты</a></li>
+        <li><a href="#">Возврат</a></li>
+        <li><a href="#vipcard">VIP-карта</a></li>
+        <li><a href="#">Правила</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Компания</h5>
+      <ul>
+        <li><a href="#halls">Залы</a></li>
+        <li><a href="#promos">Акции</a></li>
+        <li><a href="#about">О нас</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 BOUDOIR Cinema · г. Ош, Кыргызстан · +996 507 912 006</p>
+    <div class="pay-icons">
+      <span class="pay-ic">Mbank</span>
+      <span class="pay-ic">VISA</span>
+      <span class="pay-ic">MC</span>
+      <span class="pay-ic">Элкарт</span>
+      <span class="pay-ic">O!Pay</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MOVIE DETAIL OVERLAY ══ -->
+<div class="ov-wrap" id="detailOv">
+  <div class="ov-box" id="detailBox">
+    <div class="ov-head" style="position:relative;background:transparent;border:none;padding:0;">
+      <button class="ov-close" onclick="closeDetail()" style="position:absolute;top:12px;right:12px;z-index:20">✕</button>
+    </div>
+    <div class="md-hero-area">
+      <div class="md-hero-bg2" id="mdBg"></div>
+      <div class="md-hero-ov2"></div>
+      <div class="md-hero-bottom">
+        <div class="md-poster-sm-ph" id="mdPosterPh">🎬</div>
+        <img class="md-poster-sm" id="mdPoster" src="" alt="" style="display:none">
+        <div>
+          <div class="hslide-tags" id="mdTags"></div>
+          <div class="md-title2" id="mdTitle"></div>
+          <div class="slide-meta" id="mdMeta"></div>
+        </div>
+      </div>
+    </div>
+    <div class="md-body2">
+      <div class="md-pills" id="mdPills"></div>
+      <div class="md-info-grid" id="mdInfoGrid"></div>
+      <div class="md-desc2" id="mdDesc"></div>
+      <a class="md-trailer-btn" id="mdTrailerBtn" href="#" target="_blank" rel="noopener">
+        <div class="play-ic">▶</div>
+        <span>Смотреть трейлер на YouTube</span>
+      </a>
+      <div class="md-session-title">Выберите сеанс сегодня:</div>
+      <div class="md-sessions" id="mdSessions"></div>
+      <div class="md-buy-row">
+        <div class="md-price-display" id="mdPriceDisplay">—</div>
+        <button class="btn-buy-hero" onclick="openBookingFromDetail()">🎟 Купить билет</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOOKING OVERLAY ══ -->
+<div class="ov-wrap" id="bookingOv">
+  <div class="ov-box" id="bookingBox">
+    <div class="ov-head">
+      <div class="ov-head-info">
+        <h3 id="bkTitle">Покупка билета</h3>
+        <p id="bkSub">—</p>
+      </div>
+      <button class="ov-close" onclick="closeBooking()">✕</button>
+    </div>
+    <div class="ov-body">
+      <!-- STEPS -->
+      <div class="bk-steps">
+        <div class="bk-step active" id="step1btn"><span class="bk-step-num">1</span>Выбор мест</div>
+        <div class="bk-step-sep"></div>
+        <div class="bk-step" id="step2btn"><span class="bk-step-num">2</span>Данные</div>
+        <div class="bk-step-sep"></div>
+        <div class="bk-step" id="step3btn"><span class="bk-step-num">3</span>Оплата</div>
+      </div>
+
+      <!-- STEP 1: SEATS -->
+      <div class="step-panel active" id="panel1">
+        <div class="bk-screen">ЭКРАН</div>
+        <div class="sp-grid" id="spGrid"></div>
+        <div class="seat-legend">
+          <div class="sl-item"><div class="sl-box sl-free"></div>Свободно</div>
+          <div class="sl-item"><div class="sl-box sl-sel"></div>Выбрано</div>
+          <div class="sl-item"><div class="sl-box sl-taken"></div>Занято</div>
+          <div class="sl-item"><div class="sl-box sl-vip"></div>VIP (+50%)</div>
+        </div>
+        <div class="bk-summary">
+          <div class="bk-sum-row"><span class="bk-sum-label">Фильм</span><span id="sum-film">—</span></div>
+          <div class="bk-sum-row"><span class="bk-sum-label">Дата / Время</span><span id="sum-dt">—</span></div>
+          <div class="bk-sum-row"><span class="bk-sum-label">Зал</span><span id="sum-hall">—</span></div>
+          <div class="bk-sum-row"><span class="bk-sum-label">Места</span><span id="sum-seats">не выбрано</span></div>
+          <div class="bk-sum-row total"><span>ИТОГО</span><span id="sum-total">0 сом</span></div>
+          <button class="bk-next-btn" id="toStep2Btn" disabled onclick="goStep(2)">Далее: ввести данные →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: CUSTOMER INFO -->
+      <div class="step-panel" id="panel2">
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:20px;">Данные покупателя</h4>
+        <div class="checkout-grid">
+          <div class="checkout-field">
+            <div class="cf-lbl">Имя и фамилия *</div>
+            <input class="cf-in" id="buyerName" type="text" placeholder="Иванов Иван">
+          </div>
+          <div class="checkout-field">
+            <div class="cf-lbl">Телефон *</div>
+            <input class="cf-in" id="buyerPhone" type="tel" placeholder="+996 500 000 000">
+          </div>
+          <div class="checkout-field">
+            <div class="cf-lbl">Email</div>
+            <input class="cf-in" id="buyerEmail" type="email" placeholder="email@mail.com">
+          </div>
+          <div class="checkout-field">
+            <div class="cf-lbl">Номер VIP-карты (если есть)</div>
+            <input class="cf-in" id="buyerVip" type="text" placeholder="BD-XXXX-XXXX">
+          </div>
+        </div>
+        <div class="bk-summary">
+          <div class="bk-sum-row"><span class="bk-sum-label">Фильм</span><span id="sum-film2">—</span></div>
+          <div class="bk-sum-row"><span class="bk-sum-label">Места</span><span id="sum-seats2">—</span></div>
+          <div class="bk-sum-row total"><span>ИТОГО</span><span id="sum-total2">0 сом</span></div>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button class="bk-next-btn" style="background:var(--bg4);color:var(--muted);max-width:140px;" onclick="goStep(1)">← Назад</button>
+            <button class="bk-next-btn" onclick="goStep(3)">Далее: оплата →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: PAYMENT -->
+      <div class="step-panel" id="panel3">
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:20px;">Способ оплаты</h4>
+        <div class="payment-methods" id="paymentMethods">
+          <div class="pm-btn picked" onclick="selPay(this)"><span class="pm-icon">💳</span><div class="pm-name">Карта</div></div>
+          <div class="pm-btn" onclick="selPay(this)"><span class="pm-icon">📱</span><div class="pm-name">Mbank</div></div>
+          <div class="pm-btn" onclick="selPay(this)"><span class="pm-icon">💸</span><div class="pm-name">O!Pay</div></div>
+          <div class="pm-btn" onclick="selPay(this)"><span class="pm-icon">🏦</span><div class="pm-name">Элкарт</div></div>
+          <div class="pm-btn" onclick="selPay(this)"><span class="pm-icon">🏷️</span><div class="pm-name">Наличные</div></div>
+        </div>
+        <div id="cardFields">
+          <div class="checkout-grid" style="margin-bottom:16px;">
+            <div class="checkout-field" style="grid-column:1/-1">
+              <div class="cf-lbl">Номер карты</div>
+              <input class="cf-in" type="text" placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)">
+            </div>
+            <div class="checkout-field">
+              <div class="cf-lbl">Срок действия</div>
+              <input class="cf-in" type="text" placeholder="ММ / ГГ" maxlength="7">
+            </div>
+            <div class="checkout-field">
+              <div class="cf-lbl">CVV</div>
+              <input class="cf-in" type="text" placeholder="•••" maxlength="3">
+            </div>
+          </div>
+        </div>
+        <div class="bk-summary">
+          <div class="bk-sum-row"><span class="bk-sum-label">Фильм</span><span id="sum-film3">—</span></div>
+          <div class="bk-sum-row"><span class="bk-sum-label">Места</span><span id="sum-seats3">—</span></div>
+          <div class="bk-sum-row total"><span>ИТОГО К ОПЛАТЕ</span><span id="sum-total3">0 сом</span></div>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button class="bk-next-btn" style="background:var(--bg4);color:var(--muted);max-width:140px;" onclick="goStep(2)">← Назад</button>
+            <button class="bk-next-btn" onclick="confirmPay()" id="payBtn">🎟 Оплатить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TICKET OVERLAY ══ -->
+<div class="ov-wrap" id="ticketOv">
+  <div class="ov-box" id="ticketBox" style="max-width:560px;">
+    <div class="ov-head">
+      <div class="ov-head-info">
+        <h3>🎟 Ваш билет</h3>
+        <p>Сохраните или распечатайте</p>
+      </div>
+      <button class="ov-close" onclick="closeTicket()">✕</button>
+    </div>
+    <div class="ov-body" style="padding:20px 28px 28px;">
+      <div class="ticket-wrapper" id="ticketPrintArea">
+        <div class="ticket-top">
+          <div>
+            <div class="ticket-cinema">BOUDOIR <span>CINEMA</span></div>
+            <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:1px;">г. Ош, ул. Исанова 79/2К</div>
+          </div>
+          <div class="ticket-qr" id="ticketQR">SCAN<br>ME</div>
+        </div>
+        <div class="ticket-body">
+          <div class="ticket-movie" id="tktMovie">—</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px;" id="tktGenre">—</div>
+          <div class="ticket-info-grid">
+            <div class="ti-item"><span>Дата</span><strong id="tktDate">—</strong></div>
+            <div class="ti-item"><span>Время</span><strong id="tktTime">—</strong></div>
+            <div class="ti-item"><span>Зал</span><strong id="tktHall">—</strong></div>
+            <div class="ti-item"><span>Покупатель</span><strong id="tktName">—</strong></div>
+            <div class="ti-item"><span>Телефон</span><strong id="tktPhone">—</strong></div>
+            <div class="ti-item"><span>Итого</span><strong id="tktTotal" style="color:var(--gold)">—</strong></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:600;">МЕСТА:</div>
+          <div class="ticket-seats-row" id="tktSeats"></div>
+          <div class="ticket-code-area">
+            <div>
+              <div class="ticket-code-label">Код бронирования</div>
+              <div class="ticket-code" id="tktCode">BD-000000</div>
+            </div>
+            <div style="font-size:11px;color:var(--muted);text-align:right;line-height:1.5;">
+              Предъявите<br>код на кассе
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ticket-actions">
+        <button class="btn-print" onclick="printTicket()">🖨 Распечатать</button>
+        <button class="btn-done" onclick="closeTicket()">Отлично, спасибо!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIP MODAL ══ -->
+<div class="ov-wrap" id="vipOv">
+  <div class="ov-box" id="vipBox">
+    <div class="ov-head">
+      <div class="ov-head-info">
+        <h3>👑 Оформить VIP-карту</h3>
+        <p>Выберите тариф и заполните данные</p>
+      </div>
+      <button class="ov-close" onclick="closeVip()">✕</button>
+    </div>
+    <div class="vip-form-body">
+      <div class="vip-tier-sel">
+        <div class="vts on" onclick="selVipTier(this,'Silver',500)">
+          <div class="vts-name">Silver</div>
+          <div class="vts-price">500 сом/год</div>
+          <div class="vts-disc">−10% на билеты</div>
+          <div class="vts-perks">Скидка на бар 10%<br>Баллы ×1</div>
+        </div>
+        <div class="vts" onclick="selVipTier(this,'Gold',1200)">
+          <div class="vts-name">Gold</div>
+          <div class="vts-price">1200 сом/год</div>
+          <div class="vts-disc">−20% на билеты</div>
+          <div class="vts-perks">Скидка на бар 15%<br>Баллы ×2 · Приоритет</div>
+        </div>
+        <div class="vts" onclick="selVipTier(this,'Platinum',2500)">
+          <div class="vts-name">Platinum</div>
+          <div class="vts-price">2500 сом/год</div>
+          <div class="vts-disc">−30% на билеты</div>
+          <div class="vts-perks">Скидка бар 20%<br>Баллы ×3 · Д.Р. билет</div>
+        </div>
+      </div>
+      <div class="checkout-grid">
+        <div class="checkout-field">
+          <div class="cf-lbl">Имя и фамилия *</div>
+          <input class="cf-in" id="vipName" type="text" placeholder="Иванов Иван">
+        </div>
+        <div class="checkout-field">
+          <div class="cf-lbl">Дата рождения *</div>
+          <input class="cf-in" id="vipDob" type="date">
+        </div>
+        <div class="checkout-field">
+          <div class="cf-lbl">Телефон *</div>
+          <input class="cf-in" id="vipPhone" type="tel" placeholder="+996 500 000 000">
+        </div>
+        <div class="checkout-field">
+          <div class="cf-lbl">Email</div>
+          <input class="cf-in" id="vipEmail" type="email" placeholder="email@mail.com">
+        </div>
+      </div>
+      <div class="bk-summary" style="margin-bottom:16px;">
+        <div class="bk-sum-row"><span class="bk-sum-label">Тариф</span><span id="vipTierDisplay">Silver</span></div>
+        <div class="bk-sum-row total"><span>К оплате</span><span id="vipPriceDisplay">500 сом</span></div>
+      </div>
+      <button class="btn-get-vip" onclick="issueVipCard()">Оформить и оплатить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const MOVIES = [
+  {id:1,  title:'Опасные отношения',     country:'США',         year:2026, genre:'Боевик, Триллер, Комедия', age:'18+', badge:'premiere', price:350, trailer:'https://youtu.be/ORsEZRl9gYE?si=W70ekqu98Z7_6cf6', desc:'Захватывающий экшн-триллер с элементами чёрной комедии. Двое незнакомцев оказываются втянуты в смертельно опасную игру, где ставки — жизнь и свобода.',  dur:'112 мин', dir:'Режиссёр не указан', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/16490236/c451805d-0d5f-4653-b3d0-8332b749df57/300x450'},
+  {id:2,  title:'Экообуз',              country:'Кыргызстан',  year:2026, genre:'Драма', age:'16+', badge:'premiere', price:250, trailer:'https://youtu.be/0on_eK7Mt3Y?si=G0jXOj9UK6LyGQ7Y', desc:'Кыргызстанская экодрама об одном человеке, решившем изменить мир вокруг себя. Трогательная история о том, что начинается внутри каждого из нас.', dur:'98 мин', dir:'Кыргыз кино', img:'https://ic.p24.st/unsafe/540x800/cdn.p24.app/r/ps/kg/b6/b687a725-7588-478d-877e-cb4edbc17e6c/2ffda533-5403-4da8-bb0c-2d9d80d30eb6.jpg'},
+  {id:3,  title:'Секетим 3: Неге Ал?',  country:'Кыргызстан',  year:2026, genre:'Комедия', age:'16+', badge:'premiere', price:250, trailer:'https://youtu.be/m_AN83zc1Xg?si=ARCJr62fHGip96FI', desc:'Третья часть полюбившейся комедийной серии! Новые приключения, новые персонажи и ещё больше искромётного юмора.', dur:'95 мин', dir:'Кыргыз кино', img:'https://ic.p24.st/unsafe/540x800/cdn.p24.app/r/ps/kg/02/02db6cd8-9637-4ed0-8176-4a0ad1645c51/20b5267e-c87a-472b-a69c-a6586ee930f4.jpg'},
+  {id:4,  title:'Нелегал',              country:'Кыргызстан',  year:2026, genre:'Драма, Экшн', age:'18+', badge:'', price:280, trailer:'https://youtu.be/oPM577ZjLNw?si=6cJHt97V3Er9il1Q', desc:'Остросюжетный кыргызский экшн о человеке, вынужденном скрываться от закона. Жёсткая правда жизни на грани выживания.', dur:'108 мин', dir:'Кыргыз кино', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/10812607/d65cffda-3316-4f8e-b4f8-7cecae31a28b/300x450'},
+  {id:5,  title:'Берекем',              country:'Кыргызстан',  year:2026, genre:'Драма', age:'12+', badge:'hit', price:260, trailer:'https://youtu.be/SjeGwLwfJZo?si=n1628sIhI0NYrXPn', desc:'Трогательная семейная история о традициях, любви и вечных ценностях. Кино, которое объединяет поколения и заставляет думать о главном.', dur:'105 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=c9745c52322c16dfa8e1567f45b437a3&width=600&webp=1'},
+  {id:6,  title:'Мастан',               country:'Кыргызстан',  year:2026, genre:'Триллер', age:'16+', badge:'', price:260, trailer:'https://youtu.be/0necOPwb33Q?si=p2Y8VchtkhA96NAP', desc:'Напряжённый психологический триллер. Главный герой оказывается в ловушке собственного прошлого — и выхода, кажется, нет.', dur:'118 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=2234c82d0c4f240a63085f9fab5aaa28&width=600&webp=1'},
+  {id:7,  title:'Ашыкмын сага',         country:'Казахстан',   year:2026, genre:'Мелодрама', age:'18+', badge:'', price:300, trailer:'https://youtu.be/2tga0isuBcY?si=h_BhYy-eQtjz-QTB', desc:'Пронзительная история любви на фоне казахских степей. Когда судьба разлучает двух влюблённых — они ищут путь друг к другу через годы.', dur:'126 мин', dir:'Казакфильм', img:'https://cinematica.kg/uploads/movies/f04951b0-1bb2-4e4c-b353-632ed458d017.jpg/1024/800'},
+  {id:8,  title:'ШЕФ',                  country:'Кыргызстан',  year:2026, genre:'Комедия', age:'16+', badge:'', price:250, trailer:'https://youtu.be/7INY6myN6jI?si=q_xlHATrzbZHmMKg', desc:'Кулинарная комедия о молодом поваре, мечтающем завоевать мир. Вкусно, смешно и по-домашнему тепло!', dur:'92 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=74aaa230ec09ab2e316e8fd4aa0235c2&width=600&webp=1'},
+  {id:9,  title:'Майкл',                country:'США, Великобритания', year:2026, genre:'Биография, Музыка, Драма', age:'16+', badge:'hit', price:400, trailer:'https://youtu.be/y6lhHDABCzM?si=KCR3eHDQdfJ8zQRd', desc:'Захватывающая биография Майкла Джексона — Короля поп-музыки всех времён. От детства до мировой славы, от триумфа до трагедии.', dur:'148 мин', dir:'Antoine Fuqua', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/4486362/a4a9fe57-d119-4d84-b326-2e9b70087bc8/300x450'},
+  {id:10, title:'Эрке кыз',             country:'Кыргызстан',  year:2026, genre:'Мелодрама, Драма', age:'12+', badge:'', price:240, trailer:'https://youtu.be/6vUuLaK0oR8?si=rvuqHaZW3WpGD_Wh', desc:'История избалованной девушки, впервые встретившейся с настоящей жизнью. Путь взросления и обретения себя.', dur:'100 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=0a99cefc7d0f19b5de6d75423f507a2e&width=600&webp=1'},
+  {id:11, title:'Мафия: Милиондор Изи', country:'Кыргызстан',  year:2026, genre:'Драма, Криминал, Детектив', age:'18+', badge:'', price:270, trailer:'https://youtu.be/VPj7H_4pfRc?si=gaYHMZ7KucK0f72k', desc:'Криминальная драма о следователе, идущем по следу опасной организованной группировки. Когда враг ближе, чем кажется.', dur:'130 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=622d9a39a0a251d217e4a7987df2ac18&width=600&webp=1'},
+  {id:12, title:'Слизь: Слёзы лазурного моря', country:'Япония', year:2026, genre:'Аниме, Фэнтези, Боевик', age:'16+', badge:'', price:380, trailer:'https://youtu.be/_fgF9JbvFzw?si=JWchO9-lqGSsZNnw', desc:'Экранизация популярной манги. Обычный офисный работник переродился в могущественную слизь в мире фэнтези. Эпическое аниме!', dur:'120 мин', dir:'Anime Studio', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/4716873/640a3a7f-9e9a-43be-8d60-ee190db0ab80/300x450'},
+  {id:13, title:'Апакай 2. Кудалар',    country:'Кыргызстан',  year:2026, genre:'Комедия', age:'16+', badge:'hit', price:250, trailer:'https://youtu.be/OvkS4tOEEy0?si=-pTq0WzNv1icjl3x', desc:'Продолжение хитовой кыргызской комедии! Свадьба, сваты, неразбериха и непредсказуемые ситуации — всё это снова на экране.', dur:'97 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=e6f62658c12559e7c47b608e5d00408b&width=600&webp=1'},
+  {id:14, title:'Дьявол носит Prada 2', country:'США',          year:2026, genre:'Драма', age:'18+', badge:'hit', price:420, trailer:'https://www.youtube.com/results?search_query=Devil+Wears+Prada+2+trailer', desc:'Долгожданное продолжение! Мир высокой моды, острые диалоги, сильные женщины и непредсказуемые повороты сюжета.', dur:'125 мин', dir:'David Frankel', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/10703959/749a5f2d-12af-48cf-924e-82f4cc12dfac/300x450'},
+  {id:15, title:'Кызыл Көйнөк-2',       country:'Кыргызстан',  year:2026, genre:'Ужасы', age:'18+', badge:'', price:260, trailer:'https://www.youtube.com/results?search_query=Кызыл+Көйнөк+2+трейлер', desc:'Продолжение самого страшного кыргызского хоррора. Легенда о красном платье продолжает пугать. Заходите, если не боитесь!', dur:'103 мин', dir:'Кыргыз кино', img:'https://static.kinoafisha.info/k/movie_posters/220/upload/movie_posters/8/0/9/8385908/543554747320.jpg.webp'},
+  {id:16, title:'Мортал Комбат 2',      country:'США',          year:2026, genre:'Фэнтези, Боевик', age:'18+', badge:'premiere hit', price:450, trailer:'https://www.youtube.com/results?search_query=Mortal+Kombat+2+official+trailer+2026', desc:'FATALITY! Эпическое возвращение легендарного турнира. Превосходящий оригинал сиквел с безумными боевыми сценами.', dur:'118 мин', dir:'Simon McQuoid', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/10853012/dba15a22-6309-4d2b-a383-6fe60b475898/300x450'},
+  {id:17, title:'Вверх по волшебному дереву', country:'Великобритания', year:2026, genre:'Приключения, Семейный', age:'6+', badge:'', price:280, trailer:'https://www.youtube.com/results?search_query=Magic+Faraway+Tree+movie+trailer', desc:'Сказочное семейное приключение. Трое детей находят волшебное дерево и попадают в удивительные миры — один чудеснее другого!', dur:'96 мин', dir:'Ben Miller', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/10671298/a40a4a5e-3c98-4432-bb41-062ce520e9e8/300x450'},
+  {id:18, title:'Миллионер',            country:'Кыргызстан',  year:2026, genre:'Комедия', age:'16+', badge:'premiere hit', price:250, trailer:'https://www.youtube.com/results?search_query=Миллионер+кыргыз+фильм+трейлер', desc:'Комедия о том, что происходит, когда простой парень внезапно становится миллионером. Деньги меняют всё — или нет?', dur:'100 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=dc563f286fc062cdfeb30680a680dd7d&width=600&webp=1'},
+  {id:19, title:'Жолу жок',             country:'Кыргызстан',  year:2026, genre:'Комедия', age:'12+', badge:'premiere hit', price:240, trailer:'https://www.youtube.com/results?search_query=Жолу+жок+кыргыз+фильм', desc:'Дорожная комедия по горному Кыргызстану. Когда дороги нет — начинается настоящее приключение. Смешно и по-нашему!', dur:'108 мин', dir:'Кыргыз кино', img:'https://manascinema.com/files/default/image?hash=9e4de5a332205b4ec064f6e13339d51c&width=600&webp=1'},
+  {id:20, title:'Ойлон',                country:'Кыргызстан',  year:2026, genre:'Криминал, Драма', age:'18+', badge:'hit', price:270, trailer:'https://www.youtube.com/results?search_query=Ойлон+фильм+трейлер', desc:'Криминальная драма о человеке, вынужденном выбирать между долгом и честью. Подумай, прежде чем сделать шаг.', dur:'122 мин', dir:'Кыргыз кино', img:'https://alatoocinema.com/files/default/image?hash=db4c0dd9ac769d087a0c45f835aa0c31&width=600&webp=1'},
+  {id:21, title:'Майкл',                country:'США',          year:2026, genre:'Биография, Музыка', age:'16+', badge:'hit', price:400, trailer:'https://www.youtube.com/results?search_query=Michael+biopic+movie+trailer', desc:'История жизни Майкла Джексона от его рождения до завоевания мировой славы. Музыка, страсть и неповторимый стиль.', dur:'148 мин', dir:'Antoine Fuqua', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/10592371/44fd1246-9e27-4cad-83e7-1d19e76cbc31/300x450'},
+  {id:22, title:'Хокум',                country:'Ирландия, США', year:2026, genre:'Ужасы', age:'18+', badge:'', price:380, trailer:'https://www.youtube.com/results?search_query=Hocus+Pocus+horror+2026+trailer', desc:'Международный хоррор о древнем зле, пробудившемся в современном мире. Леденящий душу страх, который не отпускает ещё долго после просмотра.', dur:'106 мин', dir:'Unknown', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/10592371/44fd1246-9e27-4cad-83e7-1d19e76cbc31/300x450'},
+  {id:23, title:'Чай в большом городе', country:'Казахстан',    year:2026, genre:'Комедия, Мелодрама', age:'18+', badge:'', price:300, trailer:'https://www.youtube.com/results?search_query=Чай+в+большом+городе+трейлер', desc:'Уютная городская история о встречах за чашкой чая и больших переменах в маленькой жизни. Кино, которое согревает.', dur:'96 мин', dir:'Казакфильм', img:'https://manascinema.com/files/default/image?hash=4f63ef89c73f4f406f1b73e2be522d2e&width=600&webp=1'},
+  {id:24, title:'Флавия. Юный детектив', country:'США',         year:2026, genre:'Комедия, Детектив, Семейный', age:'16+', badge:'', price:350, trailer:'https://www.youtube.com/results?search_query=Flavia+de+Luce+movie+trailer', desc:'Юная Флавия де Люс — самый необычный детектив. Семейный детектив с юмором, загадками и неожиданными разгадками!', dur:'102 мин', dir:'Unknown', img:'https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/747dfb03-979c-4597-867d-686081bcdfcd/300x450'},
+];
+
+const HALLS = [
+  {id:1, name:'Зал 1 — Premiere', icon:'🎬', desc:'Флагманский зал. Dolby Digital, 4K проектор, кресла-реклайнеры.', seats:180, screen:'20×11 м', fmt:'4K / Dolby 7.1', price:'от 300 сом', rows:8, cols:18, vip:[6,7]},
+  {id:2, name:'Зал 2 — VIP',      icon:'👑', desc:'Эксклюзивный VIP-зал. Диваны, персональный бар.', seats:40, screen:'14×8 м', fmt:'4K / DTS', price:'от 600 сом', rows:4, cols:8, vip:[2,3]},
+  {id:3, name:'Зал 3 — Classic',  icon:'🎞️', desc:'Классический зал для комфортного просмотра.', seats:120, screen:'16×9 м', fmt:'2K / Dolby 5.1', price:'от 200 сом', rows:7, cols:14, vip:[5,6]},
+  {id:4, name:'Зал 4 — Family',   icon:'🎪', desc:'Семейный зал. Мягкие кресла, безопасно для детей.', seats:90, screen:'14×8 м', fmt:'2K / Stereo', price:'от 180 сом', rows:6, cols:12, vip:[]},
+];
+
+const TIMES = ['10:00','11:30','13:00','14:30','16:00','17:30','19:00','20:30','22:00','23:30'];
+const DATES = ['Сегодня, 14 мая','Завтра, 15 мая','Ср, 16 мая','Чт, 17 мая','Пт, 18 мая','Сб, 19 мая','Вс, 20 мая'];
+const GENRES = ['Все','Комедия','Драма','Боевик','Триллер','Ужасы','Мелодрама','Аниме','Семейный','Криминал','Биография'];
+
+const NEWS = [
+  {tag:'Новинка',title:'Мортал Комбат 2 — уже в BOUDOIR!',excerpt:'Легендарный турнир возвращается! Смотрите эпический боевик в лучших залах Оша с 14 мая.',date:'14 мая 2026',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrpL5uHFandsXnqIhZXJCmZYuBPCd1hlGBZQ&s'},
+  {tag:'Акция',title:'Студентам скидка 30% весь май',excerpt:'По студенческому билету на любые сеансы будних дней до 17:00. Учись и отдыхай с BOUDOIR!',date:'10 мая 2026',img:'https://im2.kommersant.ru/Issues.photo/DAILY/2023/139/KMO_137971_00581_1_t222_211702.jpg'},
+  {tag:'Событие',title:'Детский праздник: «Вверх по дереву»',excerpt:'В субботу специальный детский сеанс с аниматорами, попкорном и подарками для каждого ребёнка.',date:'8 мая 2026',img:'https://detfond.com/wp-content/uploads/2022/08/736353535353.jpg'},
+  {tag:'Обновление',title:'Новый Зал 1 — теперь 4K Dolby',excerpt:'Мы установили новейший лазерный 4K-проектор и систему Dolby Digital 7.1 в главном зале!',date:'3 мая 2026',img:'https://img.ixbt.site/live/topics/preview/00/05/08/98/c63883234f.png'},
+  {tag:'Премьера',title:'Кыргызское кино: «Экообуз» и «Берекем»',excerpt:'Поддержим отечественный кинематограф! Две новые кыргызские премьеры — смотрим вместе!',date:'1 мая 2026',img:' https://conservatory.kg/uploads/topics/17522267742904.png '},
+  {tag:'VIP-карта',title:'Новые привилегии для Platinum-держателей',excerpt:'С 1 июня Platinum-карта даёт бесплатный билет в день рождения и доступ к закрытым показам.',date:'28 апр 2026',img:'https://images.unsplash.com/photo-1540224485053-?w=600&q=80'},
+];
+
+// ══ STATE ══
+let activeGenre = 'Все';
+let selectedSeats = [];
+let currentBooking = {movie:null, time:'', hall:null};
+let currentDetailMovie = null;
+let currentDetailTime = '';
+let currentStep = 1;
+let selectedVipTier = {name:'Silver', price:500};
+let slideIdx = 0, slideTimer;
+
+// ══ PRELOADER ══
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('preloader').classList.add('gone');
+    revealInit();
+  }, 2000);
+});
+
+// ══ PARTICLES ══
+function buildParticles(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(6+Math.random()*12)+'s';
+    p.style.animationDelay=(Math.random()*10)+'s';
+    p.style.width=p.style.height=(1+Math.random()*2)+'px';
+    p.style.opacity=0;
+    c.appendChild(p);
+  }
+}
+
+// ══ HERO SLIDER ══
+const HERO_IDS = [15,0,8,13,5,18];
+const heroMovies = HERO_IDS.map(i=>MOVIES[i]);
+
+function buildHero(){
+  const cont=document.getElementById('heroSlides');
+  const dots=document.getElementById('heroDots');
+  cont.innerHTML=heroMovies.map((m,i)=>`
+    <div class="hslide ${i===0?'on':''}" id="hs${i}">
+      <div class="hslide-bg" style="background-image:url('${m.img}')"></div>
+      <div class="hslide-ov"></div>
+      <div class="hslide-poster"><img src="${m.img}" alt="${m.title}" onerror="this.parentElement.style.display='none'"></div>
+      <div class="hslide-content">
+        <div class="hslide-tags">
+          ${m.badge.includes('premiere')?'<span class="htag htag-pre">Премьера</span>':''}
+          ${m.badge.includes('hit')?'<span class="htag htag-hit">Хит</span>':''}
+          <span class="htag htag-age">${m.age}</span>
+        </div>
+        <div class="hslide-title">${m.title}</div>
+        <div class="hslide-meta">${m.year} · ${m.country} · ${m.dur}</div>
+        <div class="hslide-genre">${m.genre}</div>
+        <div class="hslide-desc">${m.desc.substring(0,120)}…</div>
+        <div class="hslide-acts">
+          <button class="btn-buy-hero" onclick="openBookingDirect(${m.id})">🎟 Купить — от ${m.price} сом</button>
+          <button class="btn-info-hero" onclick="openDetail(${m.id})">О фильме</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  dots.innerHTML=heroMovies.map((_,i)=>
+    `<button class="hdot ${i===0?'on':''}" onclick="goSlide(${i})"></button>`
+  ).join('');
+  startSlider();
+}
+function goSlide(n){
+  document.querySelectorAll('.hslide').forEach((s,i)=>s.classList.toggle('on',i===n));
+  document.querySelectorAll('.hdot').forEach((d,i)=>d.classList.toggle('on',i===n));
+  slideIdx=n;
+}
+function nextSlide(){goSlide((slideIdx+1)%heroMovies.length);}
+function prevSlide(){goSlide((slideIdx-1+heroMovies.length)%heroMovies.length);}
+function startSlider(){clearInterval(slideTimer);slideTimer=setInterval(nextSlide,5500);}
+
+// ══ TICKER ══
+function buildTicker(){
+  const items=[
+    '🎬 BOUDOIR CINEMA — г. Ош',
+    '🎟 Онлайн-касса 24/7',
+    '🍿 Попкорн и бар',
+    '👑 VIP-карта — скидки до 30%',
+    '📍 ул. Исанова 79/2К',
+    '📞 +996 507 912 006',
+    '🌟 Лучший кинотеатр Оша',
+    '🎂 Именинник бесплатно!',
+  ];
+  const full=[...items,...items].map(t=>
+    `<span class="ticker-item"><span class="ticker-dot">◆</span>${t}</span>`
+  ).join('');
+  const tr=document.getElementById('tickerTrack');
+  tr.innerHTML=full+full;
+}
+
+// ══ DATE BAR ══
+function buildDateBar(){
+  const bar=document.getElementById('dateBar');
+  bar.innerHTML=DATES.map((d,i)=>
+    `<button class="dbt ${i===0?'on':''}" onclick="selectDate(this)">${d}</button>`
+  ).join('');
+}
+function selectDate(el){
+  document.querySelectorAll('.dbt').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  buildSched();
+}
+
+// ══ GENRE FILTERS ══
+function buildFilters(){
+  document.getElementById('genreFilters').innerHTML=GENRES.map(g=>
+    `<button class="gf ${g==='Все'?'on':''}" onclick="setGenre(this,'${g}')">${g}</button>`
+  ).join('');
+}
+function setGenre(el,g){
+  activeGenre=g;
+  document.querySelectorAll('.gf').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderMovies();
+}
+
+// ══ MOVIES ══
+function renderMovies(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  let list=MOVIES;
+  if(activeGenre!=='Все') list=list.filter(m=>m.genre.includes(activeGenre));
+  if(q) list=list.filter(m=>
+    m.title.toLowerCase().includes(q)||
+    m.genre.toLowerCase().includes(q)||
+    m.country.toLowerCase().includes(q)
+  );
+  // Deduplicate by title
+  const seen=new Set();
+  list=list.filter(m=>{if(seen.has(m.title))return false;seen.add(m.title);return true;});
+
+  const grid=document.getElementById('moviesGrid');
+  if(!list.length){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:48px;font-size:15px">🎬 Фильмы не найдены</div>';
+    return;
+  }
+  grid.innerHTML=list.map((m,i)=>`
+    <div class="mcard reveal" style="transition-delay:${i*0.04}s">
+      <div class="mcard-poster">
+        <img src="${m.img}" alt="${m.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="mcard-poster-placeholder" style="display:none;"><div class="ph-icon">🎬</div><div class="ph-title">${m.title}</div></div>
+        <div class="mcard-badges">
+          ${m.badge.includes('premiere')?'<span class="htag htag-pre" style="font-size:9px">Премьера</span>':''}
+          ${m.badge.includes('hit')?'<span class="htag htag-hit" style="font-size:9px">Хит</span>':''}
+        </div>
+        <div class="mcard-age">${m.age}</div>
+        <div class="mcard-ov">
+          <button class="mc-buy-btn" onclick="openBookingDirect(${m.id});event.stopPropagation()">🎟 Купить</button>
+        </div>
+      </div>
+      <div class="mcard-body" onclick="openDetail(${m.id})" style="cursor:pointer">
+        <div class="mcard-title">${m.title}</div>
+        <div class="mcard-genre">${m.genre.split(',')[0].trim()}</div>
+        <div class="mcard-foot">
+          <div class="mcard-price">от ${m.price} сом</div>
+          <div class="mcard-country">${m.country.split(',')[0].trim()} · ${m.year}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  revealInit();
+}
+
+// ══ SCHEDULE ══
+function buildSched(){
+  const subset=[...new Map(MOVIES.map(m=>[m.title,m])).values()].slice(0,14);
+  document.getElementById('schedWrap').innerHTML=subset.map(m=>{
+    const ts=TIMES.filter((_,i)=>i%2===(m.id%2)).slice(0,4);
+    return `
+      <div class="sched-item reveal">
+        <div class="si-film">
+          <img class="si-thumb" src="${m.img}" alt="${m.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="si-thumb-ph" style="display:none">🎬</div>
+          <div class="si-info">
+            <h4>${m.title}</h4>
+            <p>${m.genre.split(',')[0].trim()} · ${m.age} · ${m.dur}</p>
+          </div>
+        </div>
+        <div class="si-times">
+          ${ts.map(t=>`<div class="si-time" onclick="openBookingFromSched(${m.id},'${t}')">${t}<small>Зал ${(m.id%4)+1}</small></div>`).join('')}
+        </div>
+        <div class="si-price">
+          <div class="si-from">от</div>
+          <div class="si-amt">${m.price} <span style="font-size:14px">сом</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  revealInit();
+}
+
+// ══ HALLS ══
+function buildHalls(){
+  document.getElementById('hallsGrid').innerHTML=HALLS.map(h=>{
+    let map='<div class="minimap"><div class="mm-screen">ЭКРАН</div><div class="mm-rows">';
+    for(let r=0;r<h.rows;r++){
+      map+='<div class="mm-row">';
+      for(let c=0;c<h.cols;c++){
+        const v=h.vip.includes(r),t=Math.random()<.3;
+        map+=`<div class="mm-s${v?' mv':''}${t?' mt':''}"></div>`;
+      }
+      map+='</div>';
+    }
+    map+='</div></div>';
+    return `
+      <div class="hcard reveal">
+        <span class="hcard-icon">${h.icon}</span>
+        <div class="hcard-name">${h.name}</div>
+        <p class="hcard-desc">${h.desc}</p>
+        <div class="hcard-specs">
+          <div class="hspec"><span class="hs-label">Мест</span><span class="hs-val">${h.seats}</span></div>
+          <div class="hspec"><span class="hs-label">Экран</span><span class="hs-val">${h.screen}</span></div>
+          <div class="hspec"><span class="hs-label">Формат</span><span class="hs-val">${h.fmt}</span></div>
+          <div class="hspec"><span class="hs-label">Цена</span><span class="hs-val" style="color:var(--gold)">${h.price}</span></div>
+        </div>${map}
+      </div>`;
+  }).join('');
+  revealInit();
+}
+
+// ══ NEWS ══
+function buildNews(){
+  document.getElementById('newsGrid').innerHTML=NEWS.map((n,i)=>`
+    <div class="news-card reveal" style="transition-delay:${i*0.07}s">
+      <img class="news-img" src="${n.img}" alt="${n.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="news-img-ph" style="display:none">📰</div>
+      <div class="news-body">
+        <div class="news-tag">${n.tag}</div>
+        <div class="news-title">${n.title}</div>
+        <div class="news-excerpt">${n.excerpt}</div>
+        <div class="news-date">📅 ${n.date}</div>
+      </div>
+    </div>
+  `).join('');
+  revealInit();
+}
+
+// ══ DETAIL OVERLAY ══
+function openDetail(id){
+  const m=MOVIES.find(x=>x.id===id);
+  if(!m)return;
+  currentDetailMovie=m;
+  currentDetailTime='';
+  const bg=document.getElementById('mdBg');
+  bg.style.backgroundImage=`url('${m.img}')`;
+  document.getElementById('mdTitle').textContent=m.title;
+  document.getElementById('mdMeta').textContent=`${m.year} · ${m.country}`;
+  document.getElementById('mdTags').innerHTML=`
+    ${m.badge.includes('premiere')?'<span class="htag htag-pre">Премьера</span>':''}
+    ${m.badge.includes('hit')?'<span class="htag htag-hit">Хит</span>':''}
+    <span class="htag htag-age">${m.age}</span>`;
+  document.getElementById('mdPills').innerHTML=`
+    <div class="md-pill gold">${m.genre.split(',')[0].trim()}</div>
+    ${m.genre.split(',').slice(1).map(g=>`<div class="md-pill">${g.trim()}</div>`).join('')}`;
+  document.getElementById('mdInfoGrid').innerHTML=`
+    <div class="md-info-item"><span>Страна</span><strong>${m.country}</strong></div>
+    <div class="md-info-item"><span>Год</span><strong>${m.year}</strong></div>
+    <div class="md-info-item"><span>Длительность</span><strong>${m.dur}</strong></div>
+    <div class="md-info-item"><span>Возраст</span><strong>${m.age}</strong></div>
+    <div class="md-info-item"><span>Режиссёр</span><strong>${m.dir}</strong></div>
+    <div class="md-info-item"><span>Жанр</span><strong>${m.genre.split(',')[0].trim()}</strong></div>
+    <div class="md-info-item"><span>Цена от</span><strong style="color:var(--gold)">${m.price} сом</strong></div>
+    <div class="md-info-item"><span>В кино</span><strong>Сейчас</strong></div>`;
+  document.getElementById('mdDesc').textContent=m.desc;
+  document.getElementById('mdTrailerBtn').href=m.trailer;
+  document.getElementById('mdPriceDisplay').textContent=`от ${m.price} сом`;
+  const ts=TIMES.filter((_,i)=>i%2===(m.id%2)).slice(0,5);
+  document.getElementById('mdSessions').innerHTML=ts.map(t=>
+    `<button class="md-sess-btn" onclick="selDetailTime(this,'${t}')">${t}</button>`
+  ).join('');
+  const img=document.getElementById('mdPoster');
+  img.src=m.img;
+  img.style.display='none';
+  img.onload=()=>{img.style.display='block';document.getElementById('mdPosterPh').style.display='none';};
+  img.onerror=()=>{img.style.display='none';document.getElementById('mdPosterPh').style.display='flex';};
+  openOv('detailOv');
+}
+function selDetailTime(el,t){
+  document.querySelectorAll('.md-sess-btn').forEach(b=>b.classList.remove('picked'));
+  el.classList.add('picked');
+  currentDetailTime=t;
+}
+function openBookingFromDetail(){
+  if(!currentDetailMovie)return;
+  const t=currentDetailTime||TIMES[currentDetailMovie.id%TIMES.length];
+  closeDetail();
+  setTimeout(()=>openBookingDirect(currentDetailMovie.id,t),250);
+}
+function closeDetail(){closeOv('detailOv');}
+
+// ══ BOOKING ══
+function openBookingDirect(id,forceTime){
+  const m=MOVIES.find(x=>x.id===id);
+  if(!m)return;
+  const t=forceTime||TIMES[(m.id*3)%TIMES.length];
+  const hall=HALLS[(m.id-1)%HALLS.length];
+  startBooking(m,t,hall);
+}
+function openBookingFromSched(id,time){
+  const m=MOVIES.find(x=>x.id===id);if(!m)return;
+  startBooking(m,time,HALLS[(m.id-1)%HALLS.length]);
+}
+function startBooking(movie,time,hall){
+  selectedSeats=[];
+  currentBooking={movie,time,hall};
+  currentStep=1;
+  document.getElementById('bkTitle').textContent=movie.title;
+  document.getElementById('bkSub').textContent=`Сегодня ${time} · ${hall.name}`;
+  ['sum-film','sum-film2','sum-film3'].forEach(id=>document.getElementById(id).textContent=movie.title);
+  ['sum-dt'].forEach(id=>document.getElementById(id).textContent=`14 мая 2026, ${time}`);
+  ['sum-hall'].forEach(id=>document.getElementById(id).textContent=hall.name);
+  ['sum-seats','sum-seats2','sum-seats3'].forEach(id=>document.getElementById(id).textContent='не выбрано');
+  ['sum-total','sum-total2','sum-total3'].forEach(id=>document.getElementById(id).textContent='0 сом');
+  document.getElementById('toStep2Btn').disabled=true;
+  document.getElementById('toStep2Btn').textContent='Выберите места';
+  buildSeatGrid(hall);
+  showStep(1);
+  openOv('bookingOv');
+}
+function buildSeatGrid(hall){
+  const rows=hall.rows||8,cols=hall.cols||14,vip=hall.vip||[];
+  const taken=new Set();
+  while(taken.size<Math.floor(rows*cols*.28)) taken.add(`${Math.floor(Math.random()*rows)}-${Math.floor(Math.random()*cols)}`);
+  const RL='ABCDEFGHIJKLMNOP';
+  let html='';
+  for(let r=0;r<rows;r++){
+    html+=`<div class="sp-row"><span class="sp-rl">${RL[r]}</span>`;
+    for(let c=0;c<cols;c++){
+      const k=`${r}-${c}`,isVip=vip.includes(r),isTaken=taken.has(k);
+      html+=`<div class="sp-s ${isVip?'sp-v':''} ${isTaken?'sp-x':''}"
+        data-lbl="${RL[r]}${c+1}" data-vip="${isVip}" onclick="toggleSeat(this)"></div>`;
+    }
+    html+='</div>';
+  }
+  document.getElementById('spGrid').innerHTML=html;
+}
+function toggleSeat(el){
+  if(el.classList.contains('sp-x'))return;
+  const lbl=el.dataset.lbl,isVip=el.dataset.vip==='true';
+  const price=isVip?Math.round(currentBooking.movie.price*1.5):currentBooking.movie.price;
+  if(el.classList.contains('sp-on')){
+    el.classList.remove('sp-on');
+    selectedSeats=selectedSeats.filter(s=>s.lbl!==lbl);
+  } else {
+    if(selectedSeats.length>=8){showToast('Максимум 8 мест за раз');return;}
+    el.classList.add('sp-on');
+    selectedSeats.push({lbl,price});
+  }
+  updateBookingSummary();
+}
+function updateBookingSummary(){
+  const total=selectedSeats.reduce((s,x)=>s+x.price,0);
+  const btn=document.getElementById('toStep2Btn');
+  const seatStr=selectedSeats.length?selectedSeats.map(s=>s.lbl).join(', '):'не выбрано';
+  ['sum-seats','sum-seats2','sum-seats3'].forEach(id=>document.getElementById(id).textContent=seatStr);
+  ['sum-total','sum-total2','sum-total3'].forEach(id=>document.getElementById(id).textContent=total+' сом');
+  btn.disabled=!selectedSeats.length;
+  btn.textContent=selectedSeats.length?`Далее: ввести данные (${total} сом) →`:'Выберите места';
+}
+
+// ══ STEPS ══
+function showStep(n){
+  currentStep=n;
+  document.querySelectorAll('.step-panel').forEach((p,i)=>p.classList.toggle('active',i+1===n));
+  document.querySelectorAll('.bk-step').forEach((s,i)=>{
+    s.classList.toggle('active',i+1===n);
+    s.classList.toggle('done',i+1<n);
+  });
+}
+function goStep(n){
+  if(n===2){
+    if(!selectedSeats.length){showToast('Выберите хотя бы одно место');return;}
+  }
+  if(n===3){
+    const nm=document.getElementById('buyerName').value.trim();
+    const ph=document.getElementById('buyerPhone').value.trim();
+    if(!nm||!ph){showToast('Введите имя и телефон');return;}
+  }
+  showStep(n);
+}
+function selPay(el){
+  document.querySelectorAll('.pm-btn').forEach(b=>b.classList.remove('picked'));
+  el.classList.add('picked');
+  const isCash=el.textContent.includes('Наличные');
+  document.getElementById('cardFields').style.display=isCash?'none':'block';
+}
+function fmtCard(el){
+  let v=el.value.replace(/\D/g,'').substring(0,16);
+  el.value=v.replace(/(\d{4})(?=\d)/g,'$1 ');
+}
+
+// ══ CONFIRM & TICKET ══
+function confirmPay(){
+  const m=currentBooking.movie;
+  const total=selectedSeats.reduce((s,x)=>s+x.price,0);
+  const name=document.getElementById('buyerName').value||'—';
+  const phone=document.getElementById('buyerPhone').value||'—';
+  const code='BD-'+Math.floor(100000+Math.random()*900000);
+  document.getElementById('tktMovie').textContent=m.title;
+  document.getElementById('tktGenre').textContent=m.genre.split(',')[0].trim()+' · '+m.age+' · '+m.dur;
+  document.getElementById('tktDate').textContent='14 мая 2026';
+  document.getElementById('tktTime').textContent=currentBooking.time;
+  document.getElementById('tktHall').textContent=currentBooking.hall.name;
+  document.getElementById('tktName').textContent=name;
+  document.getElementById('tktPhone').textContent=phone;
+  document.getElementById('tktTotal').textContent=total+' сом';
+  document.getElementById('tktCode').textContent=code;
+  document.getElementById('tktSeats').innerHTML=selectedSeats.map(s=>
+    `<div class="ticket-seat-badge">${s.lbl}</div>`
+  ).join('');
+  closeBooking();
+  setTimeout(()=>openOv('ticketOv'),300);
+}
+function printTicket(){window.print();}
+function closeTicket(){closeOv('ticketOv');}
+
+// ══ VIP MODAL ══
+function openVipModal(){openOv('vipOv');}
+function closeVip(){closeOv('vipOv');}
+function selectTier(el,name){document.querySelectorAll('.tier-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
+function selVipTier(el,name,price){
+  document.querySelectorAll('.vts').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  selectedVipTier={name,price};
+  document.getElementById('vipTierDisplay').textContent=name;
+  document.getElementById('vipPriceDisplay').textContent=price+' сом';
+}
+function issueVipCard(){
+  const nm=document.getElementById('vipName').value.trim();
+  const ph=document.getElementById('vipPhone').value.trim();
+  if(!nm||!ph){showToast('Введите имя и телефон');return;}
+  const cardNum='BD-'+Math.floor(1000+Math.random()*9000)+'-'+Math.floor(1000+Math.random()*9000);
+  document.getElementById('vcNumber').textContent=cardNum;
+  closeVip();
+  showToast('🎉 VIP-карта '+selectedVipTier.name+' оформлена! Номер: '+cardNum);
+}
+
+// ══ OVERLAY HELPERS ══
+function openOv(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeOv(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+function closeBooking(){closeOv('bookingOv');}
+
+// Close on bg click
+['detailOv','bookingOv','ticketOv','vipOv'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){
+    if(e.target===this){
+      if(id==='bookingOv')closeBooking();
+      else if(id==='detailOv')closeDetail();
+      else if(id==='ticketOv')closeTicket();
+      else closeVip();
+    }
+  });
+});
+
+// ══ SCROLL REVEAL ══
+function revealInit(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}
+    });
+  },{threshold:.08});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>{
+    if(!el.classList.contains('in')) obs.observe(el);
+  });
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ══ NAV ══
+function toggleMobileNav(){document.getElementById('mobileNav').classList.toggle('open');}
+function closeMobileNav(){document.getElementById('mobileNav').classList.remove('open');}
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>30);
+});
+
+// ══ SMOOTH SCROLL ══
+function scrollTo2(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+// ══ PRINT STYLES ══
+const printCSS=document.createElement('style');
+printCSS.media='print';
+printCSS.textContent=`
+  body>*:not(#ticketOv){display:none!important;}
+  #ticketOv{position:static!important;opacity:1!important;pointer-events:all!important;background:white!important;padding:0!important;}
+  .ov-box{transform:none!important;border:none!important;max-height:none!important;background:white!important;}
+  .ov-head,.ticket-actions{display:none!important;}
+  .ticket-wrapper{color:black!important;background:white!important;border:2px solid #333!important;}
+  .ticket-top{background:#7B1535!important;}
+  .ticket-cinema,.ticket-cinema span{color:#C9A84C!important;}
+  .ticket-movie,.ti-item strong,.ticket-code{color:black!important;}
+  .ticket-code{color:#7B1535!important;}
+  .ticket-seat-badge{background:#7B1535!important;color:white!important;}
+`;
+document.head.appendChild(printCSS);
+
+// ══ INIT ══
+buildParticles();
+buildHero();
+buildTicker();
+buildDateBar();
+buildFilters();
+renderMovies();
+buildSched();
+buildHalls();
+buildNews();
+revealInit();
+</script>
+</body>
+</html>
